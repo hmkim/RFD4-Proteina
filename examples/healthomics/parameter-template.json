@@ -28,11 +28,11 @@
     "optional": true
   },
   "generation_fallback_accelerator": {
-    "description": "Optional second GPU type tried when the preferred type is not reserved within generation_wait_minutes (nvidia-l40s or nvidia-l4, must differ from generation_accelerator). Leave unset to pin a single GPU type. List only GPU types qualified for the input length and batch_size.",
+    "description": "Optional second GPU type (nvidia-l40s or nvidia-l4, different from generation_accelerator) tried when the preferred type is not reserved within generation_wait_minutes. List only GPU types qualified for the input length and batch_size.",
     "optional": true
   },
   "generation_wait_minutes": {
-    "description": "Minutes HealthOmics waits for the preferred GPU before advancing to the fallback type (default 20; values below 20 produce a validation warning). Used only with generation_fallback_accelerator.",
+    "description": "Minutes to wait for the preferred GPU before advancing to the fallback type (default 20; below 20 produces a validation warning). Used only with generation_fallback_accelerator.",
     "optional": true
   }
 }
