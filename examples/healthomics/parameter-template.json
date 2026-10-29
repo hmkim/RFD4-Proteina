@@ -24,11 +24,11 @@
     "optional": true
   },
   "generation_accelerator": {
-    "description": "Explicit GPU selection: nvidia-l40s (default, 48GB) or nvidia-l4 (24GB). Validate memory use for the longest input before choosing L4.",
+    "description": "Explicit GPU selection: nvidia-l40s (default, 48GB), nvidia-l4 or nvidia-tesla-a10g (24GB). Validate memory use for the longest input before choosing a 24GB type.",
     "optional": true
   },
   "generation_fallback_accelerator": {
-    "description": "Optional second GPU type (nvidia-l40s or nvidia-l4, different from generation_accelerator) tried when the preferred type is not reserved within generation_wait_minutes. List only GPU types qualified for the input length and batch_size.",
+    "description": "Optional second GPU type (different from generation_accelerator) tried when the preferred type is not reserved within generation_wait_minutes. List only GPU types qualified for the input length and batch_size and offered in the Region.",
     "optional": true
   },
   "generation_wait_minutes": {

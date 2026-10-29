@@ -77,12 +77,16 @@ workflow {
     if (!params.generation_cpus.toString().isInteger() || params.generation_cpus.toInteger() < 1) {
         error '--generation_cpus must be a positive integer.'
     }
-    if (!(params.generation_accelerator in ['nvidia-l40s', 'nvidia-l4'])) {
-        error '--generation_accelerator must be nvidia-l40s or nvidia-l4.'
+    // HealthOmics accelerator types with at least 24 GB of GPU memory. nvidia-l40s is the type
+    // qualified by RFD4-Proteina; nvidia-l4 and nvidia-tesla-a10g (24 GB each) need a separate
+    // memory check for the longest input and batch_size. Some Regions offer only a subset.
+    def accelerators = ['nvidia-l40s', 'nvidia-l4', 'nvidia-tesla-a10g']
+    if (!(params.generation_accelerator in accelerators)) {
+        error "--generation_accelerator must be one of ${accelerators.join(', ')}."
     }
     if (params.generation_fallback_accelerator) {
-        if (!(params.generation_fallback_accelerator in ['nvidia-l40s', 'nvidia-l4'])) {
-            error '--generation_fallback_accelerator must be nvidia-l40s or nvidia-l4.'
+        if (!(params.generation_fallback_accelerator in accelerators)) {
+            error "--generation_fallback_accelerator must be one of ${accelerators.join(', ')}."
         }
         if (params.generation_fallback_accelerator == params.generation_accelerator) {
             error '--generation_fallback_accelerator must differ from --generation_accelerator.'
