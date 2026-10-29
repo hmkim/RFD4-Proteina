@@ -173,6 +173,7 @@ def prepare(request: dict[str, Any]) -> tuple[Path, dict[str, Any]]:
         "package_version": version,
         "runner_sha256": sha256(Path(__file__)),
         "healthomics_run_id": os.environ.get("AWS_WORKFLOW_RUN"),
+        "healthomics_resource_type": os.environ.get("AWS_HEALTHOMICS_RESOURCE_TYPE"),
         "command": command,
         "generated_files": [],
     }

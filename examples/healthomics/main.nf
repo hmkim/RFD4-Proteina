@@ -3,10 +3,11 @@ nextflow.enable.dsl = 2
 process GENERATE {
     tag "shard-${shard_id}"
     label 'generation'
+    label (params.generation_fallback_accelerator ? 'generation_fallback' : 'generation_single')
     cpus params.generation_cpus.toInteger()
     memory '32 GB'
     maxForks 2
-    accelerator 1, type: params.generation_accelerator
+    // GPU selection lives in conf/healthomics.config (single accelerator or omicsResourceFallbackOrder).
     container params.container_image
     publishDir "${params.outdir}/shards", mode: 'copy'
 
@@ -78,6 +79,17 @@ workflow {
     }
     if (!(params.generation_accelerator in ['nvidia-l40s', 'nvidia-l4'])) {
         error '--generation_accelerator must be nvidia-l40s or nvidia-l4.'
+    }
+    if (params.generation_fallback_accelerator) {
+        if (!(params.generation_fallback_accelerator in ['nvidia-l40s', 'nvidia-l4'])) {
+            error '--generation_fallback_accelerator must be nvidia-l40s or nvidia-l4.'
+        }
+        if (params.generation_fallback_accelerator == params.generation_accelerator) {
+            error '--generation_fallback_accelerator must differ from --generation_accelerator.'
+        }
+    }
+    if (!params.generation_wait_minutes.toString().isInteger() || params.generation_wait_minutes.toInteger() < 1) {
+        error '--generation_wait_minutes must be a positive integer.'
     }
     def input_cif = file(params.input_cif, checkIfExists: true)
     def model_bundle = file(params.model_bundle, checkIfExists: true)

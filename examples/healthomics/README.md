@@ -452,7 +452,7 @@ Use an immutable container digest and a new seed when requesting new samples.
 Generation requests one GPU, eight CPUs and 32 GB of host memory per task. The
 HealthOmics accelerator is `nvidia-l40s`, a GPU qualified by RFD4-Proteina.
 `generation_accelerator` can explicitly select `nvidia-l4` (24 GB) for a separate
-compatibility and memory check. The workflow never switches GPUs automatically.
+compatibility and memory check. The workflow never switches GPUs automatically unless you opt in: `generation_fallback_accelerator` enables HealthOmics resource fallback (`omicsResourceFallbackOrder`). The task first requests `generation_accelerator`, and if capacity is not reserved within `generation_wait_minutes` (default 20) it advances to the fallback type. The directive is applied only in the `healthomics` profile through `conf/healthomics.config`. List a fallback GPU only when the input length and `batch_size` have been qualified on it: an out-of-memory failure is retried within the active profile and never advances to the next one, so an unqualified fallback turns a capacity wait into a failed run. The active profile is recorded as `healthomics_resource_type` in `provenance.json`. Falling back to a GPU with more memory (for example `nvidia-l4` then `nvidia-l40s`) is always safe with respect to memory.
 L4 runs must be qualified for the intended input lengths and batch sizes before
 scaling; successful container loading does not establish model generation support.
 `generation_cpus` adjusts the CPU request without changing the accelerator;
